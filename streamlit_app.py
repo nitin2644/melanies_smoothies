@@ -53,13 +53,8 @@ for a in ingredient_list:
     submit = st.button('Submit Order')
 
     if submit:
-        if not clean_name:
-            st.warning("Please enter your name!")
-        elif not clean_ingredients_final:
-            st.warning("Please select at least one fruit!")
-        else:
-            try:
-                session.sql(my_insert_stmt).collect()
-                st.success(f"Your Smoothie is ordered, {clean_name}!")
-            except Exception as e:
-                st.error(f"Order failed: {str(e)}")
+        try:
+            session.sql(my_insert_stmt).collect()
+            st.success(f"Your Smoothie is ordered, {clean_name}!")
+        except Exception as e:
+            st.error(f"Order failed: {str(e)}")
