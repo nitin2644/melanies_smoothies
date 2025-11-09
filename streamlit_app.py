@@ -31,16 +31,16 @@ for a in ingredient_list:
     # Clean each fruit name + join with single space and comma
     #clean_ingredients = [fruit.strip() for fruit in ingredient_list]
     ingredients_string += a + ' '
-    for fruit_chosen in clean_ingredients:
-        search_on_value = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0].strip()
+    #for fruit_chosen in clean_ingredients:
+        #search_on_value = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0].strip()
         
-        st.subheader(f"{fruit_chosen} Nutrition Information")
-        response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{search_on_value}")
+        #st.subheader(f"{fruit_chosen} Nutrition Information")
+      #  response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{a}")
         
-        if response.status_code == 200:
-            st.dataframe(response.json(), use_container_width=True)
-        else:
-            st.warning(f"No nutrition info for {fruit_chosen} (using: {search_on_value})")
+       # if response.status_code == 200:
+         #   st.dataframe(response.json(), use_container_width=True)
+       # else:
+          #  st.warning(f"No nutrition info for {fruit_chosen} (using: {search_on_value})")
 
     # SUPER CLEAN INSERT: No leading/trailing/double spaces
     clean_name = name_on_order.strip()
