@@ -26,11 +26,11 @@ ingredient_list = st.multiselect(
     options=ingredient_options,
     max_selections=5
 )
-
-if ingredient_list:
+ingredients_string = ''
+for a in ingredient_list:
     # Clean each fruit name + join with single space and comma
-    clean_ingredients = [fruit.strip() for fruit in ingredient_list]
-    ingredients_string = ', '.join(clean_ingredients) 
+    #clean_ingredients = [fruit.strip() for fruit in ingredient_list]
+    ingredients_string += a + ' '
     for fruit_chosen in clean_ingredients:
         search_on_value = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0].strip()
         
@@ -44,11 +44,10 @@ if ingredient_list:
 
     # SUPER CLEAN INSERT: No leading/trailing/double spaces
     clean_name = name_on_order.strip()
-    clean_ingredients_final = ingredients_string.strip()
 
     my_insert_stmt = f"""
         INSERT INTO smoothies.public.orders (ingredients, name_on_order, order_filled)
-        VALUES ('{clean_ingredients_final}', '{clean_name}', FALSE)
+        VALUES ('{clean_ingredients}', '{clean_name}', FALSE)
     """
 
     submit = st.button('Submit Order')
@@ -62,6 +61,5 @@ if ingredient_list:
             try:
                 session.sql(my_insert_stmt).collect()
                 st.success(f"Your Smoothie is ordered, {clean_name}!")
-                st.balloons()
             except Exception as e:
                 st.error(f"Order failed: {str(e)}")
