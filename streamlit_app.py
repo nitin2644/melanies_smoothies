@@ -62,7 +62,7 @@ if ingredient_list:
         else:
             try:
                 session.sql(my_insert_stmt).collect()
-                st.success(f"Your Smoothie is ordered, {clean_name}!", icon="")
+                st.success(f"Your Smoothie is ordered, {clean_name}!")
                 st.balloons()
             except Exception as e:
                 st.error(f"Order failed: {str(e)}")
