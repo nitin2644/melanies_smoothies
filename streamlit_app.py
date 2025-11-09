@@ -47,7 +47,7 @@ for a in ingredient_list:
 
     my_insert_stmt = f"""
         INSERT INTO smoothies.public.orders (ingredients, name_on_order, order_filled)
-        VALUES ('{clean_ingredients}', '{clean_name}', FALSE)
+        VALUES ('{ingredients_string}', '{clean_name}', FALSE)
     """
 
     submit = st.button('Submit Order')
