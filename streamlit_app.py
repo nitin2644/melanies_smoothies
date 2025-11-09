@@ -7,7 +7,8 @@ import pandas as pd
 st.title("Customize Your Smoothie")
 st.write("""Choose the fruits you want in your custom smoothie.""")
 
-name_on_order = st.text_input('Name on Smoothie:')
+# Clean name input
+name_on_order = st.text_input('Name on Smoothie:').strip()
 if name_on_order:
     st.write('The name on your smoothie will be:', name_on_order)
 
@@ -27,36 +28,41 @@ ingredient_list = st.multiselect(
 )
 
 if ingredient_list:
-    ingredients_string = ','.join(ingredient_list)
+    # Clean each fruit name + join with single space and comma
+    clean_ingredients = [fruit.strip() for fruit in ingredient_list]
+    ingredients_string = ', '.join(clean_ingredients)  # "Apple, Banana, Mango"
 
-    for fruit_chosen in ingredient_list:
-        search_on_value = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
+    for fruit_chosen in clean_ingredients:
+        search_on_value = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0].strip()
+        
         st.subheader(f"{fruit_chosen} Nutrition Information")
-
         response = requests.get(f"https://fruityvice.com/api/fruit/{search_on_value}")
+        
         if response.status_code == 200:
-            fv_data = response.json()
-            st.dataframe(fv_data, use_container_width=True)
+            st.dataframe(response.json(), use_container_width=True)
         else:
-            st.error(f"API error for {search_on_value}: {response.status_code}")
+            st.warning(f"No nutrition info for {fruit_chosen} (using: {search_on_value})")
 
-    # CORRECT WAY: Use .format() with literal values (safe in Streamlit-in-Snowflake)
+    # SUPER CLEAN INSERT: No leading/trailing/double spaces
+    clean_name = name_on_order.strip()
+    clean_ingredients_final = ingredients_string.strip()
+
     my_insert_stmt = f"""
         INSERT INTO smoothies.public.orders (ingredients, name_on_order, order_filled)
-        VALUES ('{ingredients_string}', '{name_on_order}', FALSE)
+        VALUES ('{clean_ingredients_final}', '{clean_name}', FALSE)
     """
 
-    time_to_insert = st.button('Submit Order')
+    submit = st.button('Submit Order')
 
-    if time_to_insert:
-        if not name_on_order.strip():
+    if submit:
+        if not clean_name:
             st.warning("Please enter your name!")
-        elif not ingredient_list:
+        elif not clean_ingredients_final:
             st.warning("Please select at least one fruit!")
         else:
             try:
                 session.sql(my_insert_stmt).collect()
-                st.success(f"Your Smoothie is ordered, {name_on_order}! Well done!")
+                st.success(f"Your Smoothie is ordered, {clean_name}!", icon="")
                 st.balloons()
             except Exception as e:
                 st.error(f"Order failed: {str(e)}")
