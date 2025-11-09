@@ -36,7 +36,7 @@ if ingredient_list:
         # Get correct search term (e.g., "Apples" → "Apple")
         search_on_value = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
 
-        st.write(f"**{fruit_chosen}** → searching as: **{search_on_value}**")
+        #st.write(f"**{fruit_chosen}** → searching as: **{search_on_value}**")
 
         st.subheader(f"{fruit_chosen} Nutrition Information")
 
