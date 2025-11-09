@@ -30,13 +30,12 @@ ingredient_list = st.multiselect(
 if ingredient_list:
     # Clean each fruit name + join with single space and comma
     clean_ingredients = [fruit.strip() for fruit in ingredient_list]
-    ingredients_string = ', '.join(clean_ingredients)  # "Apple, Banana, Mango"
-
+    ingredients_string = ', '.join(clean_ingredients) 
     for fruit_chosen in clean_ingredients:
         search_on_value = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0].strip()
         
         st.subheader(f"{fruit_chosen} Nutrition Information")
-        response = requests.get(f"https://fruityvice.com/api/fruit/{search_on_value}")
+        response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{search_on_value}")
         
         if response.status_code == 200:
             st.dataframe(response.json(), use_container_width=True)
