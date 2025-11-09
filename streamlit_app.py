@@ -50,11 +50,11 @@ for a in ingredient_list:
         VALUES ('{ingredients_string}', '{clean_name}', FALSE)
     """
 
-    submit = st.button('Submit Order')
+submit = st.button('Submit Order')
 
-    if submit:
-        try:
-            session.sql(my_insert_stmt).collect()
-            st.success(f"Your Smoothie is ordered, {clean_name}!")
-        except Exception as e:
-            st.error(f"Order failed: {str(e)}")
+if submit:
+    try:
+        session.sql(my_insert_stmt).collect()
+        st.success(f"Your Smoothie is ordered, {clean_name}!")
+    except Exception as e:
+        st.error(f"Order failed: {str(e)}")
